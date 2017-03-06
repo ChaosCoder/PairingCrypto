@@ -33,19 +33,19 @@ public protocol DataPairingCoding {
     
 }
 
-class PairingCrypto {
+public class PairingCrypto {
     let pairing: pairing_ptr
     let g: element_ptr
     let h: element_ptr
     
-    convenience init(filePath: String, dictionary: [String: AnyObject]) {
+    public convenience init(filePath: String, dictionary: [String: AnyObject]) {
         let str = try! String(contentsOfFile: filePath)
         let g = dictionary["g"] as! String
         let h = dictionary["h"] as! String
         self.init(params: str, g: g, h: h)
     }
     
-    init(params: String, g gStr: String, h hStr: String) {
+    public init(params: String, g gStr: String, h hStr: String) {
         pairing = UnsafeMutablePointer<pairing_s>.allocate(capacity: 1)
         g = UnsafeMutablePointer<element_s>.allocate(capacity: 1)
         h = UnsafeMutablePointer<element_s>.allocate(capacity: 1)
@@ -72,7 +72,7 @@ class PairingCrypto {
         h.deallocate(capacity: 1)
     }
     
-    func generateKey() -> Key {
+    public func generateKey() -> Key {
         var a = element_s()
         element_init_Zr(&a, pairing)
         element_random(&a)
@@ -87,7 +87,7 @@ class PairingCrypto {
         return Key(k1: k1, k2: k2)
     }
     
-    func generateTokenPart(key: Key, hashA hashAData: Data, hashB hashBData: Data) -> TokenPart {
+    public func generateTokenPart(key: Key, hashA hashAData: Data, hashB hashBData: Data) -> TokenPart {
         
         var hashA = element_s()
         var hashAData = hashAData
@@ -121,7 +121,7 @@ class PairingCrypto {
         return TokenPart(t_r: t_r, t_ri:t_ri)
     }
     
-    func encrypt(hashData: Data, key: Key) -> CipherText {
+    public func encrypt(hashData: Data, key: Key) -> CipherText {
         var hash = element_s()
         element_init_G1(&hash, pairing)
         
@@ -147,7 +147,7 @@ class PairingCrypto {
         return CipherText(c1: c1, c2: c2)
     }
     
-    func testEquality(token t: Token, cipherTextA c_a: CipherText, cipherTextB c_b: CipherText) -> Bool {
+    public func testEquality(token t: Token, cipherTextA c_a: CipherText, cipherTextB c_b: CipherText) -> Bool {
         
         var temp1 = element_s()
         var temp2 = element_s()

@@ -13,7 +13,7 @@ public struct Key {
     let k1: element_s
     let k2: element_s
     
-    init(k1: element_s, k2: element_s) {
+    public init(k1: element_s, k2: element_s) {
         self.k1 = k1
         self.k2 = k2
     }

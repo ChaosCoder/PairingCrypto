@@ -13,7 +13,7 @@ public struct CipherText {
     let c1: element_t
     let c2: element_t
     
-    init(c1: element_t, c2: element_t) {
+    public init(c1: element_t, c2: element_t) {
         self.c1 = c1
         self.c2 = c2
     }

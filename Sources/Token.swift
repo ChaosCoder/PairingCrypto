@@ -68,13 +68,13 @@ public struct Token {
     let t_ri: element_s
     let t_rj: element_s
     
-    init(t_r: element_s, t_ri: element_t, t_rj: element_t) {
+    public init(t_r: element_s, t_ri: element_t, t_rj: element_t) {
         self.t_r = t_r
         self.t_ri = t_ri
         self.t_rj = t_rj
     }
     
-    init(part1: TokenPart, part2: TokenPart) {
+    public init(part1: TokenPart, part2: TokenPart) {
         assert(part1.t_r == part2.t_r, "Nonce in token parts must be the same")
         self.init(t_r: part1.t_r, t_ri: part1.t_ri, t_rj: part2.t_ri)
     }
