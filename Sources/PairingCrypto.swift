@@ -28,7 +28,7 @@ extension element_s: CustomDebugStringConvertible {
 
 public protocol DataPairingCoding {
     
-    init(data: Data, pairing: pairing_ptr)
+    init(data: Data, pairingCrypto: PairingCrypto)
     func data() -> Data
     
 }

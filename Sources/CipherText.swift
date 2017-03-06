@@ -33,11 +33,11 @@ extension CipherText: CustomDebugStringConvertible {
 
 extension CipherText: DataPairingCoding {
     
-    public init(data: Data, pairing: pairing_ptr) {
+    public init(data: Data, pairingCrypto: PairingCrypto) {
         var c1 = element_s()
         var c2 = element_s()
-        element_init_G1(&c1, pairing)
-        element_init_G1(&c2, pairing)
+        element_init_G1(&c1, pairingCrypto.pairing)
+        element_init_G1(&c2, pairingCrypto.pairing)
         
         var data = data
         data.withUnsafeMutableBytes { (bytes: UnsafeMutablePointer<UInt8>) in

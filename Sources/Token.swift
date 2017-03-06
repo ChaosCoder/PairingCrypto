@@ -33,11 +33,11 @@ extension TokenPart: CustomDebugStringConvertible {
 
 extension TokenPart: DataPairingCoding {
     
-    public init(data: Data, pairing: pairing_ptr) {
+    public init(data: Data, pairingCrypto: PairingCrypto) {
         var t_r = element_s()
         var t_ri = element_s()
-        element_init_G2(&t_r, pairing)
-        element_init_G2(&t_ri, pairing)
+        element_init_G2(&t_r, pairingCrypto.pairing)
+        element_init_G2(&t_ri, pairingCrypto.pairing)
         
         var data = data
         data.withUnsafeMutableBytes { (bytes: UnsafeMutablePointer<UInt8>) in
@@ -94,13 +94,13 @@ extension Token: CustomDebugStringConvertible {
 
 extension Token: DataPairingCoding {
     
-    public init(data: Data, pairing: pairing_ptr) {
+    public init(data: Data, pairingCrypto: PairingCrypto) {
         var t_r = element_s()
         var t_ri = element_s()
         var t_rj = element_s()
-        element_init_G2(&t_r, pairing)
-        element_init_G2(&t_ri, pairing)
-        element_init_G2(&t_rj, pairing)
+        element_init_G2(&t_r, pairingCrypto.pairing)
+        element_init_G2(&t_ri, pairingCrypto.pairing)
+        element_init_G2(&t_rj, pairingCrypto.pairing)
         
         var data = data
         data.withUnsafeMutableBytes { (bytes: UnsafeMutablePointer<UInt8>) in

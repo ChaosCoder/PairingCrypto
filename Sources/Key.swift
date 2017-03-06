@@ -33,11 +33,11 @@ extension Key: CustomDebugStringConvertible {
 
 extension Key: DataPairingCoding {
     
-    public init(data: Data, pairing: pairing_ptr) {
+    public init(data: Data, pairingCrypto: PairingCrypto) {
         var k1 = element_s()
         var k2 = element_s()
-        element_init_G1(&k1, pairing)
-        element_init_G2(&k2, pairing)
+        element_init_G1(&k1, pairingCrypto.pairing)
+        element_init_G2(&k2, pairingCrypto.pairing)
         
         var data = data
         data.withUnsafeMutableBytes { (bytes: UnsafeMutablePointer<UInt8>) in

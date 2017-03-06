@@ -30,7 +30,7 @@ class PairingCryptoTests: XCTestCase {
     func testKeySerialization() {
         let k_a = pC.generateKey()
         let d = k_a.data()
-        let k_b = Key(data: d, pairing: pC.pairing)
+        let k_b = Key(data: d, pairingCrypto: pC)
 
         XCTAssertEqual(k_a, k_b)
     }
@@ -41,7 +41,7 @@ class PairingCryptoTests: XCTestCase {
         
         let cipherText = pC.encrypt(hashData: hashData, key: k)
         let d = cipherText.data()
-        let cipherTextCopy = CipherText(data: d, pairing: pC.pairing)
+        let cipherTextCopy = CipherText(data: d, pairingCrypto: pC)
         
         XCTAssertEqual(cipherText, cipherTextCopy)
     }
@@ -53,7 +53,7 @@ class PairingCryptoTests: XCTestCase {
         
         let tokenPartA = pC.generateTokenPart(key: k_a, hashA: hashDataA, hashB: hashDataB)
         let d = tokenPartA.data()
-        let tokenPartB = TokenPart(data: d, pairing: pC.pairing)
+        let tokenPartB = TokenPart(data: d, pairingCrypto: pC)
         
         XCTAssertEqual(tokenPartA, tokenPartB)
     }
@@ -70,7 +70,7 @@ class PairingCryptoTests: XCTestCase {
         
         let token = Token(part1: tokenPartA, part2: tokenPartB)
         let d = token.data()
-        let tokenCopy = Token(data: d, pairing: pC.pairing)
+        let tokenCopy = Token(data: d, pairingCrypto: pC)
         
         XCTAssertEqual(token, tokenCopy)
     }
