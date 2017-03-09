@@ -15,6 +15,51 @@ extension element_s: Equatable {
     }
 }
 
+public extension element_s {
+    
+    public enum Group: UInt8 {
+        case G1
+        case G2
+        case GT
+        case Zr
+    }
+    
+    public func data(group: Group) -> Data {
+        var varSelf = self
+        let length = Int(element_length_in_bytes(&varSelf))
+        
+        var data = Data(count: length + 1)
+        let _ = data.withUnsafeMutableBytes { (bytes: UnsafeMutablePointer<UInt8>) in
+            bytes.initialize(to: group.rawValue)
+            element_to_bytes(bytes.advanced(by: 1), &varSelf)
+        }
+        
+        return data
+    }
+    
+    public init(data: Data, pairingCrypto: PairingCrypto) {
+        self.init()
+        
+        let group = Group(rawValue: data.first!)!
+        
+        switch group {
+        case .G1:
+            element_init_G1(&self, pairingCrypto.pairing)
+        case .G2:
+            element_init_G2(&self, pairingCrypto.pairing)
+        case .GT:
+            element_init_GT(&self, pairingCrypto.pairing)
+        case .Zr:
+            element_init_Zr(&self, pairingCrypto.pairing)
+        }
+        
+        var data = data
+        let _ = data.withUnsafeMutableBytes { (bytes: UnsafeMutablePointer<UInt8>) in
+            element_from_bytes(&self, bytes.advanced(by: 1))
+        }
+    }
+}
+
 extension element_s: CustomDebugStringConvertible {
     public var debugDescription: String {
         var copy = self

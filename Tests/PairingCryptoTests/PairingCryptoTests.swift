@@ -1,4 +1,5 @@
 import XCTest
+import CPBC
 @testable import PairingCrypto
 
 class PairingCryptoTests: XCTestCase {
@@ -26,6 +27,18 @@ class PairingCryptoTests: XCTestCase {
                            h: "[[1676759768174325156003241441740791590013598303793064886418947421476, 13349959736866478891045496775334347962196502297273549798310823806704, 14727859933506183895549904828293851795425233949062987470047599933879],[8961486908759489459110795117028822251760323447003281463137115691013, 6300058896299683989134423867160550956138105846221925003480628451909, 10029734123861349102791317103426840069297755775347263190520724149198]]")
         super.setUp()
     }
+    
+    func testElementSerialization() {
+        let k = pC.generateKey()
+        let d_k1 = k.k1.data(group: .G1)
+        let d_k2 = k.k2.data(group: .G2)
+        
+        let k1Copy = element_s(data: d_k1, pairingCrypto: pC)
+        let k2Copy = element_s(data: d_k2, pairingCrypto: pC)
+        
+        XCTAssertEqual(k.k1, k1Copy)
+        XCTAssertEqual(k.k2, k2Copy)
+    }
 
     func testKeySerialization() {
         let k_a = pC.generateKey()
@@ -33,6 +46,11 @@ class PairingCryptoTests: XCTestCase {
         let k_b = Key(data: d, pairingCrypto: pC)
 
         XCTAssertEqual(k_a, k_b)
+    
+        measure {
+            let d = k_a.data()
+            let _ = Key(data: d, pairingCrypto: self.pC)
+        }
     }
     
     func testCipherTextSerialization() {
@@ -44,6 +62,11 @@ class PairingCryptoTests: XCTestCase {
         let cipherTextCopy = CipherText(data: d, pairingCrypto: pC)
         
         XCTAssertEqual(cipherText, cipherTextCopy)
+        
+        measure {
+            let d = cipherText.data()
+            let _ = CipherText(data: d, pairingCrypto: self.pC)
+        }
     }
     
     func testTokenPartSerialization() {
@@ -56,6 +79,11 @@ class PairingCryptoTests: XCTestCase {
         let tokenPartB = TokenPart(data: d, pairingCrypto: pC)
         
         XCTAssertEqual(tokenPartA, tokenPartB)
+        
+        measure {
+            let d = tokenPartA.data()
+            let _ = TokenPart(data: d, pairingCrypto: self.pC)
+        }
     }
     
     func testTokenSerialization() {
@@ -73,6 +101,11 @@ class PairingCryptoTests: XCTestCase {
         let tokenCopy = Token(data: d, pairingCrypto: pC)
         
         XCTAssertEqual(token, tokenCopy)
+        
+        measure {
+            let d = token.data()
+            let _ = Token(data: d, pairingCrypto: self.pC)
+        }
     }
 
     func testEquality() {
@@ -90,11 +123,31 @@ class PairingCryptoTests: XCTestCase {
         let data = "ABCDEF".data(using: .ascii)!
         let c_a = pC.encrypt(hashData: data, key: k_a)
         let c_b = pC.encrypt(hashData: data, key: k_b)
-        
+
         let equal = pC.testEquality(token: token, cipherTextA: c_a, cipherTextB: c_b)
         XCTAssertTrue(equal)
     }
     
+    func testPerformanceEquality() {
+        let k_a = pC.generateKey()
+        let k_b = pC.generateKey()
+        
+        let hashDataA = "PRETTY_LONG_DATA_A".data(using: .ascii)!
+        let hashDataB = "PRETTY_LONG_DATA_B".data(using: .ascii)!
+        
+        let tokenPartA = pC.generateTokenPart(key: k_a, hashA: hashDataA, hashB: hashDataB)
+        let tokenPartB = pC.generateTokenPart(key: k_b, hashA: hashDataA, hashB: hashDataB)
+        
+        let token = Token(part1: tokenPartA, part2: tokenPartB)
+        
+        let data = "ABCDEF".data(using: .ascii)!
+        let c_a = pC.encrypt(hashData: data, key: k_a)
+        let c_b = pC.encrypt(hashData: data, key: k_b)
+
+        measure {
+            let _ = self.pC.testEquality(token: token, cipherTextA: c_a, cipherTextB: c_b)
+        }
+    }
 
     static var allTests : [(String, (PairingCryptoTests) -> () throws -> Void)] {
         return [

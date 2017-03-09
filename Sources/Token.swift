@@ -74,6 +74,13 @@ public struct Token {
         self.t_rj = t_rj
     }
     
+    public init(t_r_data: Data, t_ri_data: Data, t_rj_data: Data, pairingCrypto: PairingCrypto) throws {
+        let t_r = element_s(data: t_r_data, pairingCrypto: pairingCrypto)
+        let t_ri = element_s(data: t_ri_data, pairingCrypto: pairingCrypto)
+        let t_rj = element_s(data: t_rj_data, pairingCrypto: pairingCrypto)
+        self.init(t_r: t_r, t_ri: t_ri, t_rj: t_rj)
+    }
+    
     public init(part1: TokenPart, part2: TokenPart) {
         assert(part1.t_r == part2.t_r, "Nonce in token parts must be the same")
         self.init(t_r: part1.t_r, t_ri: part1.t_ri, t_rj: part2.t_ri)
