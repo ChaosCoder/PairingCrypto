@@ -15,6 +15,10 @@ extension element_s: Equatable {
     }
 }
 
+enum PairingCryptoError: Error {
+    case decodingError
+}
+
 public extension element_s {
     
     public enum Group: UInt8 {
@@ -37,10 +41,14 @@ public extension element_s {
         return data
     }
     
-    public init(data: Data, pairingCrypto: PairingCrypto) {
+    public init(data: Data, pairingCrypto: PairingCrypto) throws {
         self.init()
         
-        let group = Group(rawValue: data.first!)!
+        guard let byte = data.first,
+            let group = Group(rawValue: byte),
+            data.count > 1 else {
+            throw PairingCryptoError.decodingError
+        }
         
         switch group {
         case .G1:

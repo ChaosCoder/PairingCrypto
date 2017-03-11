@@ -75,9 +75,9 @@ public struct Token {
     }
     
     public init(t_r_data: Data, t_ri_data: Data, t_rj_data: Data, pairingCrypto: PairingCrypto) throws {
-        let t_r = element_s(data: t_r_data, pairingCrypto: pairingCrypto)
-        let t_ri = element_s(data: t_ri_data, pairingCrypto: pairingCrypto)
-        let t_rj = element_s(data: t_rj_data, pairingCrypto: pairingCrypto)
+        let t_r = try element_s(data: t_r_data, pairingCrypto: pairingCrypto)
+        let t_ri = try element_s(data: t_ri_data, pairingCrypto: pairingCrypto)
+        let t_rj = try element_s(data: t_rj_data, pairingCrypto: pairingCrypto)
         self.init(t_r: t_r, t_ri: t_ri, t_rj: t_rj)
     }
     

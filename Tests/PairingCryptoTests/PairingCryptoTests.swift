@@ -33,11 +33,15 @@ class PairingCryptoTests: XCTestCase {
         let d_k1 = k.k1.data(group: .G1)
         let d_k2 = k.k2.data(group: .G2)
         
-        let k1Copy = element_s(data: d_k1, pairingCrypto: pC)
-        let k2Copy = element_s(data: d_k2, pairingCrypto: pC)
-        
-        XCTAssertEqual(k.k1, k1Copy)
-        XCTAssertEqual(k.k2, k2Copy)
+        do {
+            let k1Copy = try element_s(data: d_k1, pairingCrypto: pC)
+            let k2Copy = try element_s(data: d_k2, pairingCrypto: pC)
+            
+            XCTAssertEqual(k.k1, k1Copy)
+            XCTAssertEqual(k.k2, k2Copy)
+        } catch {
+            XCTFail()
+        }
     }
 
     func testKeySerialization() {
