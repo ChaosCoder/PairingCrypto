@@ -47,13 +47,13 @@ class PairingCryptoTests: XCTestCase {
     func testKeySerialization() {
         let k_a = pC.generateKey()
         let d = k_a.data()
-        let k_b = Key(data: d, pairingCrypto: pC)
+        let k_b = PairingKey(data: d, pairingCrypto: pC)
 
         XCTAssertEqual(k_a, k_b)
     
         measure {
             let d = k_a.data()
-            let _ = Key(data: d, pairingCrypto: self.pC)
+            let _ = PairingKey(data: d, pairingCrypto: self.pC)
         }
     }
     

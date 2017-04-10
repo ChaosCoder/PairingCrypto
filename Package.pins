@@ -1,0 +1,18 @@
+{
+  "autoPin": true,
+  "pins": [
+    {
+      "package": "CGMP",
+      "reason": null,
+      "repositoryURL": "https://github.com/ChaosCoder/CGMP.git",
+      "version": "1.0.0"
+    },
+    {
+      "package": "CPBC",
+      "reason": null,
+      "repositoryURL": "https://github.com/ChaosCoder/CPBC.git",
+      "version": "1.0.0"
+    }
+  ],
+  "version": 1
+}

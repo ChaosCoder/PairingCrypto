@@ -9,7 +9,7 @@
 import Foundation
 import CPBC
 
-public struct Key {
+public struct PairingKey {
     let k1: element_s
     let k2: element_s
     
@@ -19,19 +19,19 @@ public struct Key {
     }
 }
 
-extension Key: Equatable {
-    public static func ==(lhs: Key, rhs: Key) -> Bool {
+extension PairingKey: Equatable {
+    public static func ==(lhs: PairingKey, rhs: PairingKey) -> Bool {
         return lhs.k1 == rhs.k1 && lhs.k2 == rhs.k2
     }
 }
 
-extension Key: CustomDebugStringConvertible {
+extension PairingKey: CustomDebugStringConvertible {
     public var debugDescription: String {
         return "[\(k1), \(k2)]"
     }
 }
 
-extension Key: DataPairingCoding {
+extension PairingKey: DataPairingCoding {
     
     public init(data: Data, pairingCrypto: PairingCrypto) {
         var k1 = element_s()

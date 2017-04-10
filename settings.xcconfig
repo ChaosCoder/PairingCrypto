@@ -1,3 +1,7 @@
 MACOSX_DEPLOYMENT_TARGET = 10.12
+IPHONEOS_DEPLOYMENT_TARGET = 9.0
 HEADER_SEARCH_PATHS = /usr/local/include
-LIBRARY_SEARCH_PATHS = /usr/local/lib
+LIBRARY_SEARCH_PATHS = /Users/andreasganske/Development/Swift/PairingCrypto/Libraries/gmplib-arm64-iOS/lib /Users/andreasganske/Development/Swift/PairingCrypto/Libraries/pbclib-arm64-iOS/lib
+LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*] = /Users/andreasganske/Development/Swift/PairingCrypto/Libraries/gmplib-x86_64-iOS/lib /Users/andreasganske/Development/Swift/PairingCrypto/Libraries/pbclib-x86_64-iOS/lib
+LIBRARY_SEARCH_PATHS[sdk=iphoneos*] = /Users/andreasganske/Development/Swift/PairingCrypto/Libraries/gmplib-arm64-iOS/lib /Users/andreasganske/Development/Swift/PairingCrypto/Libraries/pbclib-arm64-iOS/lib
+LIBRARY_SEARCH_PATHS[sdk=macosx*] = /usr/local/lib

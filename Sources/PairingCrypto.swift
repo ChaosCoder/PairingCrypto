@@ -1,5 +1,5 @@
-import CPBC
 import Foundation
+import CPBC
 
 func element_copy(e: element_t) -> element_ptr {
     var e = e
@@ -125,7 +125,7 @@ public class PairingCrypto {
         h.deallocate(capacity: 1)
     }
     
-    public func generateKey() -> Key {
+    public func generateKey() -> PairingKey {
         var a = element_s()
         element_init_Zr(&a, pairing)
         element_random(&a)
@@ -137,10 +137,10 @@ public class PairingCrypto {
         element_pow_zn(&k1, g, &a)
         element_pow_zn(&k2, h, &a)
         
-        return Key(k1: k1, k2: k2)
+        return PairingKey(k1: k1, k2: k2)
     }
     
-    public func generateTokenPart(key: Key, hashA hashAData: Data, hashB hashBData: Data) -> TokenPart {
+    public func generateTokenPart(key: PairingKey, hashA hashAData: Data, hashB hashBData: Data) -> TokenPart {
         
         var hashA = element_s()
         var hashAData = hashAData
@@ -174,7 +174,7 @@ public class PairingCrypto {
         return TokenPart(t_r: t_r, t_ri:t_ri)
     }
     
-    public func encrypt(hashData: Data, key: Key) -> CipherText {
+    public func encrypt(hashData: Data, key: PairingKey) -> CipherText {
         var hash = element_s()
         element_init_G1(&hash, pairing)
         
