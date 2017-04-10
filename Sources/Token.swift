@@ -10,12 +10,18 @@ import Foundation
 import CPBC
 
 public struct TokenPart {
-    let t_r: element_s
-    let t_ri: element_s
+    public let t_r: element_s
+    public let t_ri: element_s
     
     init(t_r: element_s, t_ri: element_s) {
         self.t_r = t_r
         self.t_ri = t_ri
+    }
+    
+    public init(t_r_data: Data, t_ri_data: Data, pairingCrypto: PairingCrypto) throws {
+        let t_r = try element_s(data: t_r_data, pairingCrypto: pairingCrypto)
+        let t_ri = try element_s(data: t_ri_data, pairingCrypto: pairingCrypto)
+        self.init(t_r: t_r, t_ri: t_ri)
     }
 }
 

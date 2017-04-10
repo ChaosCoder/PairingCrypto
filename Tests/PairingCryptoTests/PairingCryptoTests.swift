@@ -73,7 +73,7 @@ class PairingCryptoTests: XCTestCase {
         }
     }
     
-    func testTokenPartSerialization() {
+    func testTokenPartSerialization() throws {
         let k_a = pC.generateKey()
         let hashDataA = "A_ID".data(using: .ascii)!
         let hashDataB = "B_ID".data(using: .ascii)!
@@ -83,6 +83,12 @@ class PairingCryptoTests: XCTestCase {
         let tokenPartB = TokenPart(data: d, pairingCrypto: pC)
         
         XCTAssertEqual(tokenPartA, tokenPartB)
+        
+        let tokenPartAData_r = tokenPartA.t_r.data(group: .G2)
+        let tokenPartAData_ri = tokenPartA.t_ri.data(group: .G2)
+        let tokenPartC = try TokenPart(t_r_data: tokenPartAData_r, t_ri_data: tokenPartAData_ri, pairingCrypto: pC)
+        
+        XCTAssertEqual(tokenPartA, tokenPartC)
         
         measure {
             let d = tokenPartA.data()
