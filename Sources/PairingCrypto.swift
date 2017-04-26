@@ -140,26 +140,15 @@ public class PairingCrypto {
         return PairingKey(k1: k1, k2: k2)
     }
     
-    public func generateTokenPart(key: PairingKey, hashA hashAData: Data, hashB hashBData: Data) -> TokenPart {
-        
-        var hashA = element_s()
-        var hashAData = hashAData
-        element_init_Zr(&hashA, pairing)
-        hashAData.withUnsafeMutableBytes { bytes in
-            element_from_hash(&hashA, bytes, Int32(hashAData.count))
-        }
-        
-        var hashB = element_s()
-        var hashBData = hashBData
-        element_init_Zr(&hashB, pairing)
-        hashAData.withUnsafeMutableBytes { bytes in
-            element_from_hash(&hashB, bytes, Int32(hashBData.count))
-        }
+    public func generateTokenPart(key: PairingKey, secret secretData: Data) -> TokenPart {
         
         var r = element_s()
+        var secretData = secretData
         element_init_Zr(&r, pairing)
-        element_add(&r, &hashA, &hashB)
-    
+        secretData.withUnsafeMutableBytes { bytes in
+            element_from_hash(&r, bytes, Int32(secretData.count))
+        }
+        
         var t_r = element_s()
         var t_ri = element_s()
         

@@ -75,10 +75,10 @@ class PairingCryptoTests: XCTestCase {
     
     func testTokenPartSerialization() throws {
         let k_a = pC.generateKey()
-        let hashDataA = "A_ID".data(using: .ascii)!
-        let hashDataB = "B_ID".data(using: .ascii)!
         
-        let tokenPartA = pC.generateTokenPart(key: k_a, hashA: hashDataA, hashB: hashDataB)
+        let secret = "SECRET".data(using: .ascii)!
+        
+        let tokenPartA = pC.generateTokenPart(key: k_a, secret: secret)
         let d = tokenPartA.data()
         let tokenPartB = TokenPart(data: d, pairingCrypto: pC)
         
@@ -100,11 +100,10 @@ class PairingCryptoTests: XCTestCase {
         let k_a = pC.generateKey()
         let k_b = pC.generateKey()
         
-        let hashDataA = "A_ID".data(using: .ascii)!
-        let hashDataB = "B_ID".data(using: .ascii)!
+        let secret = "SECRET".data(using: .ascii)!
         
-        let tokenPartA = pC.generateTokenPart(key: k_a, hashA: hashDataA, hashB: hashDataB)
-        let tokenPartB = pC.generateTokenPart(key: k_b, hashA: hashDataA, hashB: hashDataB)
+        let tokenPartA = pC.generateTokenPart(key: k_a, secret: secret)
+        let tokenPartB = pC.generateTokenPart(key: k_b, secret: secret)
         
         let token = Token(part1: tokenPartA, part2: tokenPartB)
         let d = token.data()
@@ -122,11 +121,10 @@ class PairingCryptoTests: XCTestCase {
         let k_a = pC.generateKey()
         let k_b = pC.generateKey()
         
-        let hashDataA = "A_ID".data(using: .ascii)!
-        let hashDataB = "B_ID".data(using: .ascii)!
+        let secret = "SECRET".data(using: .ascii)!
         
-        let tokenPartA = pC.generateTokenPart(key: k_a, hashA: hashDataA, hashB: hashDataB)
-        let tokenPartB = pC.generateTokenPart(key: k_b, hashA: hashDataA, hashB: hashDataB)
+        let tokenPartA = pC.generateTokenPart(key: k_a, secret: secret)
+        let tokenPartB = pC.generateTokenPart(key: k_b, secret: secret)
         
         let token = Token(part1: tokenPartA, part2: tokenPartB)
         
@@ -142,11 +140,10 @@ class PairingCryptoTests: XCTestCase {
         let k_a = pC.generateKey()
         let k_b = pC.generateKey()
         
-        let hashDataA = "PRETTY_LONG_DATA_A".data(using: .ascii)!
-        let hashDataB = "PRETTY_LONG_DATA_B".data(using: .ascii)!
+        let secret = "SECRET".data(using: .ascii)!
         
-        let tokenPartA = pC.generateTokenPart(key: k_a, hashA: hashDataA, hashB: hashDataB)
-        let tokenPartB = pC.generateTokenPart(key: k_b, hashA: hashDataA, hashB: hashDataB)
+        let tokenPartA = pC.generateTokenPart(key: k_a, secret: secret)
+        let tokenPartB = pC.generateTokenPart(key: k_b, secret: secret)
         
         let token = Token(part1: tokenPartA, part2: tokenPartB)
         
