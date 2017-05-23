@@ -93,12 +93,12 @@ public class PairingCrypto {
     
     public convenience init(filePath: String, dictionary: [String: AnyObject]) {
         let str = try! String(contentsOfFile: filePath)
-        let g = dictionary["g"] as! String
-        let h = dictionary["h"] as! String
+        let g = dictionary["g"] as? String
+        let h = dictionary["h"] as? String
         self.init(params: str, g: g, h: h)
     }
     
-    public init(params: String, g gStr: String, h hStr: String) {
+    public init(params: String, g gStr: String?, h hStr: String?) {
         pairing = UnsafeMutablePointer<pairing_s>.allocate(capacity: 1)
         g = UnsafeMutablePointer<element_s>.allocate(capacity: 1)
         h = UnsafeMutablePointer<element_s>.allocate(capacity: 1)
@@ -110,12 +110,32 @@ public class PairingCrypto {
         element_init_G1(g, pairing);
         element_init_G2(h, pairing);
         
-        let _ = gStr.withCString { gCStr in
-            element_set_str(g, gCStr, 0)
+        if let gStr = gStr {
+            let _ = gStr.withCString { gCStr in
+                element_set_str(g, gCStr, 0)
+            }
+        } else {
+            element_random(g)
+            var buffer: [Int8] = [Int8](repeating: 0, count: 512)
+            withUnsafeMutablePointer(to: &buffer[0]) { pointer in
+                let _ = element_snprint(pointer, buffer.count, g)
+                let string = String(cString: pointer)
+                print(string)
+            }
         }
         
-        let _ = hStr.withCString { hCStr in
-            element_set_str(h, hCStr, 0)
+        if let hStr = hStr {
+            let _ = hStr.withCString { hCStr in
+                element_set_str(h, hCStr, 0)
+            }
+        } else {
+            element_random(h)
+            var buffer: [Int8] = [Int8](repeating: 0, count: 512)
+            withUnsafeMutablePointer(to: &buffer[0]) { pointer in
+                let _ = element_snprint(pointer, buffer.count, h)
+                let string = String(cString: pointer)
+                print(string)
+            }
         }
     }
     
@@ -190,40 +210,33 @@ public class PairingCrypto {
     }
     
     public func testEquality(token t: Token, cipherTextA c_a: CipherText, cipherTextB c_b: CipherText) -> Bool {
-        
+        let t_a = TokenPart(t_r: t.t_r, t_ri: t.t_ri)
+        let t_b = TokenPart(t_r: t.t_r, t_ri: t.t_rj)
+        let result_a = oneSidedEqualityResult(tokenPart: t_a, cipherText: c_a)
+        let result_b = oneSidedEqualityResult(tokenPart: t_b, cipherText: c_b)
+        return result_a == result_b
+    }
+    
+    public func oneSidedEqualityResult(tokenPart: TokenPart, cipherText c: CipherText) -> Data {
         var temp1 = element_s()
         var temp2 = element_s()
-        var temp3 = element_s()
-        var temp4 = element_s()
         
         element_init_GT(&temp1, pairing)
         element_init_GT(&temp2, pairing)
-        element_init_GT(&temp3, pairing)
-        element_init_GT(&temp4, pairing)
         
-        var c_a_c1 = c_a.c1
-        var c_a_c2 = c_a.c2
-        var c_b_c1 = c_b.c1
-        var c_b_c2 = c_b.c2
+        var c_c1 = c.c1
+        var c_c2 = c.c2
+        var t_r = tokenPart.t_r
+        var t_ri = tokenPart.t_ri
         
-        var t_r = t.t_r
-        var t_ri = t.t_ri
-        var t_rj = t.t_rj
-        
-        pairing_apply(&temp1, &c_a_c2, &t_r, pairing)
-        pairing_apply(&temp2, &c_a_c1, &t_ri, pairing)
-        
-        pairing_apply(&temp3, &c_b_c2, &t_r, pairing)
-        pairing_apply(&temp4, &c_b_c1, &t_rj, pairing)
+        pairing_apply(&temp1, &c_c2, &t_r, pairing)
+        pairing_apply(&temp2, &c_c1, &t_ri, pairing)
         
         var result_a = element_s()
+        
         element_init_GT(&result_a, pairing)
         element_div(&result_a, &temp1, &temp2)
         
-        var result_b = element_s()
-        element_init_GT(&result_b, pairing)
-        element_div(&result_b, &temp3, &temp4)
-        
-        return result_a == result_b
+        return result_a.data(group: .GT)
     }
 }
