@@ -136,6 +136,27 @@ class PairingCryptoTests: XCTestCase {
         XCTAssertTrue(equal)
     }
     
+    func testNonEquality() {
+        let k_a = pC.generateKey()
+        let k_b = pC.generateKey()
+        
+        let secret = "SECRET".data(using: .ascii)!
+        
+        let tokenPartA = pC.generateTokenPart(key: k_a, secret: secret)
+        let tokenPartB = pC.generateTokenPart(key: k_b, secret: secret)
+        
+        let token = Token(part1: tokenPartA, part2: tokenPartB)
+        
+        let data_a = "ABCDEF".data(using: .ascii)!
+        let data_b = "FEDCBA".data(using: .ascii)!
+        
+        let c_a = pC.encrypt(hashData: data_a, key: k_a)
+        let c_b = pC.encrypt(hashData: data_b, key: k_b)
+        
+        let equal = pC.testEquality(token: token, cipherTextA: c_a, cipherTextB: c_b)
+        XCTAssertFalse(equal)
+    }
+    
     func testPerformanceEquality() {
         let k_a = pC.generateKey()
         let k_b = pC.generateKey()
