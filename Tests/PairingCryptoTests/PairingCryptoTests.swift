@@ -57,19 +57,19 @@ class PairingCryptoTests: XCTestCase {
         }
     }
     
-    func testCipherTextSerialization() {
+    func testBlindingSerialization() {
         let k = pC.generateKey()
         let hashData = "ID".data(using: .ascii)!
         
-        let cipherText = pC.encrypt(hashData: hashData, key: k)
+        let cipherText = pC.blind(hashData: hashData, key: k)
         let d = cipherText.data()
-        let cipherTextCopy = CipherText(data: d, pairingCrypto: pC)
+        let cipherTextCopy = Blinding(data: d, pairingCrypto: pC)
         
         XCTAssertEqual(cipherText, cipherTextCopy)
         
         measure {
             let d = cipherText.data()
-            let _ = CipherText(data: d, pairingCrypto: self.pC)
+            let _ = Blinding(data: d, pairingCrypto: self.pC)
         }
     }
     
@@ -129,10 +129,10 @@ class PairingCryptoTests: XCTestCase {
         let token = Token(part1: tokenPartA, part2: tokenPartB)
         
         let data = "ABCDEF".data(using: .ascii)!
-        let c_a = pC.encrypt(hashData: data, key: k_a)
-        let c_b = pC.encrypt(hashData: data, key: k_b)
+        let c_a = pC.blind(hashData: data, key: k_a)
+        let c_b = pC.blind(hashData: data, key: k_b)
 
-        let equal = pC.testEquality(token: token, cipherTextA: c_a, cipherTextB: c_b)
+        let equal = pC.testEquality(token: token, blindingA: c_a, blindingB: c_b)
         XCTAssertTrue(equal)
     }
     
@@ -150,10 +150,10 @@ class PairingCryptoTests: XCTestCase {
         let data_a = "ABCDEF".data(using: .ascii)!
         let data_b = "FEDCBA".data(using: .ascii)!
         
-        let c_a = pC.encrypt(hashData: data_a, key: k_a)
-        let c_b = pC.encrypt(hashData: data_b, key: k_b)
+        let c_a = pC.blind(hashData: data_a, key: k_a)
+        let c_b = pC.blind(hashData: data_b, key: k_b)
         
-        let equal = pC.testEquality(token: token, cipherTextA: c_a, cipherTextB: c_b)
+        let equal = pC.testEquality(token: token, blindingA: c_a, blindingB: c_b)
         XCTAssertFalse(equal)
     }
     
@@ -169,18 +169,18 @@ class PairingCryptoTests: XCTestCase {
         let token = Token(part1: tokenPartA, part2: tokenPartB)
         
         let data = "ABCDEF".data(using: .ascii)!
-        let c_a = pC.encrypt(hashData: data, key: k_a)
-        let c_b = pC.encrypt(hashData: data, key: k_b)
+        let c_a = pC.blind(hashData: data, key: k_a)
+        let c_b = pC.blind(hashData: data, key: k_b)
 
         measure {
-            let _ = self.pC.testEquality(token: token, cipherTextA: c_a, cipherTextB: c_b)
+            let _ = self.pC.testEquality(token: token, blindingA: c_a, blindingB: c_b)
         }
     }
 
     static var allTests : [(String, (PairingCryptoTests) -> () throws -> Void)] {
         return [
             ("testKeySerialization", testKeySerialization),
-            ("testCipherTextSerialization", testCipherTextSerialization),
+            ("testBlindingSerialization", testBlindingSerialization),
             ("testTokenPartSerialization", testTokenPartSerialization),
             ("testTokenSerialization", testTokenSerialization),
             ("testEquality", testEquality),

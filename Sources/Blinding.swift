@@ -9,7 +9,7 @@
 import Foundation
 import CPBC
 
-public struct CipherText {
+public struct Blinding {
     let c1: element_t
     let c2: element_t
     
@@ -19,19 +19,19 @@ public struct CipherText {
     }
 }
 
-extension CipherText: Equatable {
-    public static func ==(lhs: CipherText, rhs: CipherText) -> Bool {
+extension Blinding: Equatable {
+    public static func ==(lhs: Blinding, rhs: Blinding) -> Bool {
         return lhs.c1 == rhs.c1 && lhs.c2 == rhs.c2
     }
 }
 
-extension CipherText: CustomDebugStringConvertible {
+extension Blinding: CustomDebugStringConvertible {
     public var debugDescription: String {
         return "[\(c1), \(c2)]"
     }
 }
 
-extension CipherText: DataPairingCoding {
+extension Blinding: DataPairingCoding {
     
     public init(data: Data, pairingCrypto: PairingCrypto) {
         var c1 = element_s()

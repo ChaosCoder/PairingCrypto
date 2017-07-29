@@ -183,7 +183,7 @@ public class PairingCrypto {
         return TokenPart(t_r: t_r, t_ri:t_ri)
     }
     
-    public func encrypt(hashData: Data, key: PairingKey) -> CipherText {
+    public func blind(hashData: Data, key: PairingKey) -> Blinding {
         var hash = element_s()
         element_init_G1(&hash, pairing)
         
@@ -206,18 +206,18 @@ public class PairingCrypto {
         element_pow_zn(&c2, &k1, &v);
         element_mul(&c2, &c2, &hash);
         
-        return CipherText(c1: c1, c2: c2)
+        return Blinding(c1: c1, c2: c2)
     }
     
-    public func testEquality(token t: Token, cipherTextA c_a: CipherText, cipherTextB c_b: CipherText) -> Bool {
+    public func testEquality(token t: Token, blindingA c_a: Blinding, blindingB c_b: Blinding) -> Bool {
         let t_a = TokenPart(t_r: t.t_r, t_ri: t.t_ri)
         let t_b = TokenPart(t_r: t.t_r, t_ri: t.t_rj)
-        let result_a = oneSidedEqualityResult(tokenPart: t_a, cipherText: c_a)
-        let result_b = oneSidedEqualityResult(tokenPart: t_b, cipherText: c_b)
+        let result_a = oneSidedEqualityResult(tokenPart: t_a, blinding: c_a)
+        let result_b = oneSidedEqualityResult(tokenPart: t_b, blinding: c_b)
         return result_a == result_b
     }
     
-    public func oneSidedEqualityResult(tokenPart: TokenPart, cipherText c: CipherText) -> Data {
+    public func oneSidedEqualityResult(tokenPart: TokenPart, blinding c: Blinding) -> Data {
         var temp1 = element_s()
         var temp2 = element_s()
         
